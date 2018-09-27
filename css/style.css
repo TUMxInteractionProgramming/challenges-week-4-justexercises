@@ -152,6 +152,8 @@ li.selected {
 
     /* #5 #tab-bar #flexify the buttons*/
     display: flex;
+    align-content: stretch;
+
 }
 
 /* #5 #smileys #lazy: we can reuse most of the tab-bar buttons' styles for the chat-bar buttons */
@@ -269,4 +271,27 @@ li.selected {
 
 .message.own {
     margin-left: 17.5%;
+}
+
+/* icon size on channels */
+i {
+    font-size: 24px;
+}
+
+/* #8.2 send message icon */
+div #send-mess {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    font-size: 24px;
+}
+
+input{
+    font-size: larger;
+    /* display:flex; */
+    justify-content: space-between;
+    align-self: stretch;
+    height: 100%;
+    width: 400px;
+    border: none;
 }

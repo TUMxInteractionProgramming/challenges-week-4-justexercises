@@ -26,7 +26,7 @@
     <script src="js/script.js"></script>
 
 </head>
-<body>
+<body onload="listChannels()">
 
 <!-- channel area -->
 <div id="channels">
@@ -187,7 +187,7 @@
         <button id="emojis-button" onclick="toggleEmojis()"><img src="http://ip.lfe.mw.tum.de/sections/smile-o.png" alt="Smiley"></button>
         <div id="emojis">&#x1F601; &#x1F602; &#x1F603; &#x1F604; &#x1F605; &#x1F606; &#x1F607;</div>
         <form>
-          <input type="text" name="message-text" placeholder="Message..." maxlength="140"><br>
+          <input type="text" id="message-text" placeholder="Message..." maxlength="140"><br>
         </form>
         <button id="send-mess" class="fas fa-arrow-right" alt="send" onclick="sendMessage()"></button>
     </div>

@@ -43,7 +43,7 @@ function star() {
     // #7.1 using awesome font
     $('#channel-star').toggleClass("fas far");
     /* #7.4 Toggle de starred property on selected channel */
-        currentChannel.starred = $('#channel-star').hasClass('fas');
+    currentChannel.starred = $('#channel-star').hasClass('fas');
 }
 
 /**
@@ -76,8 +76,8 @@ function Message(createdBy, latitude, longitude, text, own) {
     this.createdBy = createdBy,
     this.latitude = latitude,
     this.longitude = longitude,
-    this.createdOn = Date.now(),
-    this.expiresOn = Date.now()+15*60*1000,
+    this.createdOn = new Date()
+    this.expiresOn = Date.now() + (15*60*1000),
     this.text = text,
     this.own = true
 }
@@ -89,29 +89,56 @@ function sendMessage() {
     // say hello!
     var helloMessage = new Message(" " ," " ," " ,"Hello Chatter");
     console.log(helloMessage);
-    // insert message
-    var textMessage = $('message-text').val();
-        var messageObject = new Message (" ", " ", " ", textMessage);
 
-    return createMessageElement(messageObject).appendTo('#messages');
+    // #8.2 insert message
+    var textMessage = $('#message-text').val();
+    // console.log("Message text: "+ textMessage); // for debugging
+    var messageObject = new Message (currentLocation.what3words, " ", " ", textMessage);
+    createMessageElement(messageObject);
+
+    // #8.2 clear imput
+    $('#message-text').val(" ");
 }
 
 /**
  * #8.1 function to write messages into HTML document
  */
 function createMessageElement(messageObject) {
-    var createdBy = messageObject.createdBy,
-        createdOn = messageObject.createdOn.toLocaleString('en-GB', {timezone: 'UTC'}),
-        expiresIn = messageObject.expiresOn/60000,
-        text = messageObject.text;
+    var createdBy = messageObject.createdBy;
+    var createdOn = messageObject.createdOn.toLocaleString('en-US', {timezone: 'UTC'}); //toDateString();
+    var expiresInMs = (messageObject.expiresOn - Date.now()) / 60000;
+    var expiresIn = Math.round(expiresInMs);
+    var text = messageObject.text;
 
-    // var newMessage = $('<div class="message"><h3>')
-    //     .append('<a/>', {
-    //         html: createdBy,
-    //         href: "<strong>"+createdBy+"</strong>",
-    //         target: "_blank",
-    //     }) + createdOn + $('<em/>', {html: expiresIn+'min. left'}) + $('</h3><p>')+ text + $('</p><button>+5 min.</button></div>');
+    var messageInnerHTML = "<div class='message'><h3><a href='https://www.what3words.com/" + createdBy + "' target='_blank'><strong>"  + createdBy + "</strong></a>" + createdOn + "<em>" + expiresIn + "min. left</em></h3><p>" + text + "</p><button>+5 min.</button></div>";
+    $('#messages').append(messageInnerHTML);
+}
 
-    // $(newMessage);
-    document.innerHTML = "<div class='message'><h3><a href='" + createdBy + "' target='_blank'><strong>"  + createdBy + "</strong></a>" + createdOn + "<em>" + expiresIn + "min. left</em></h3><p>" + text + "</p><button>+5 min.</button></div>";
+/**
+ * #8.3 dynamically build channels
+ */
+function listChannels() {
+    //var channelObject {}
+    createChannelElement(prueba);
+}
+
+function createChannelElement(channelObject) {
+    var onclickChannel = channel.name;
+    var clasStar = "theClassStar";
+    var my_onclick = switchChannel(onclickChannel);
+    var widgets = [{
+        "li" : {"onclick" : my_onclick, "text" : "channel.name" },
+        "span" : {"class" : "channel-meta"},
+        "i" : {"class" : clasStar},
+        "i" : {"class" : "fas fa-chevron-right", "alt" : "select"}
+    }];
+    $(function() {
+        $.each(widgets, function(i, item){
+            $('<li>').attr({'onclick': item.li.onclick,
+                            'text' : item.li.text}).html(
+                $('<span>').attr('class', item.span.class).html(
+                    $("<i>").attr('class', item.i.class)(
+                        $("<i>").attr('class', item.i.class)))).appendTo('#channels');
+        });
+    });
 }
